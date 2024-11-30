@@ -4,7 +4,8 @@ import helmet from 'helmet';
 import cors from 'cors';
 import compression from 'compression';
 import rateLimit from 'express-rate-limit';
-import api from '../src/routes/api';
+import dotenv from 'dotenv';
+import api from '../src/routes/api.ts';
 const app: Express = express();
 
 // Configurations for api limiter pkg
@@ -16,7 +17,7 @@ const apiLimiter = rateLimit({
 });
 
 if (process.env.NODE_ENV !== 'production') {
-	require('dotenv').config();
+	dotenv.config();
 }
 
 app.use('/api/', apiLimiter);
@@ -56,4 +57,4 @@ const PORT = process.env.PORT ?? 5173;
 app.listen(PORT, () => { console.info(`Server is running on http://localhost:${PORT}`); });
 
 // Export app for testing purposes
-module.exports = app;
+export default app;

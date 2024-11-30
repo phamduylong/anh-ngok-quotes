@@ -1,0 +1,38 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  deploy-sing:
+
+    runs-on: ubuntu-latest
+
+    timeout-minutes: 10
+
+    environment: 
+      name: ProductionSing
+      url: https://blv-anh-ngok-said.onrender.com/
+
+    steps:
+      - name: Trigger Deployment To Singapore Server
+        run: |
+          response=$(curl -v -X POST https://api.render.com/v1/services/${{ secrets.WEB_SERVICE_ID_SING }}/deploys --header 'accept: application/json' --header 'authorization: Bearer ${{ secrets.PRODUCTION_API_KEY }}' --header 'content-type: application/json' --data '{ "clearCache": "do_not_clear" }' --include)
+
+  deploy-europe:
+
+    runs-on: ubuntu-latest
+
+    timeout-minutes: 10
+
+    environment: 
+      name: ProductionEU
+      url: https://anh-ngok-api-eu.onrender.com/
+      
+    steps:
+      - name: Trigger Deployment To Frankfurt Server
+        run: |
+          response=$(curl -v -X POST https://api.render.com/v1/services/${{ secrets.WEB_SERVICE_ID_EU }}/deploys --header 'accept: application/json' --header 'authorization: Bearer ${{ secrets.PRODUCTION_API_KEY }}' --header 'content-type: application/json' --data '{ "clearCache": "do_not_clear" }' --include)
